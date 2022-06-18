@@ -1,6 +1,6 @@
-package Library_Management;
+package com.sudha;
 
-import Library_Management.Library.LoginStatus;
+import com.sudha.Library.LoginStatus;
 
 public class LoggedInUser {
 	
@@ -26,8 +26,4 @@ public class LoggedInUser {
 	//loggedInUser class.
 	//why did we comment out else part in search method
 	//role class needs to be used.
-	
-	
-	
-
 }
