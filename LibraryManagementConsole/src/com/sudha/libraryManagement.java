@@ -45,7 +45,7 @@ public class libraryManagement {
 					do// admin's menu starts..
 					{
 						System.out.println("\n" + " 1 - Add Book\n" + "2 - Show Books\n" + "3 - Show Readers' Detail\n"
-								+ "4 - Search\n" + "4 - PaymentApproval");
+								+ "4 - Search\n" + "5 - Approve"+ "6 - Edit Book");
 						int lOperation = sc.nextInt();
 
 						switch (lOperation) {
@@ -65,6 +65,15 @@ public class libraryManagement {
 
 						case 4: // To search
 							library.search(sc);
+							break;
+						case 5: // approve
+
+							library.approval(sc);
+							break;
+			
+						case 6: // Edit book
+
+							library.editBook(sc);
 							break;
 
 						default:
@@ -109,30 +118,38 @@ public class libraryManagement {
 							library.login(sc, userName, passInput);
 						} else if (loggedInUser.getLoginStatus().equals(LoginStatus.UserNotFound)) {
 							System.out.println("Email ID or Password is incorrect.");
-							signUpStatus = library.signingUp(sc);
+							signUpStatus = library.signUp(sc);
 						}
 						break;
 
 					case 3: // To SignUp
-						library.subscription(sc, loggedInUser.getUser());
+						library.signUp(sc);
 						break;
 
 					case 4: // To Subscribe
-						library.subscription(sc, loggedInUser.getUser());
+						if(loggedInUser!=null)
+						{
+							library.subscription(sc, loggedInUser.getUser());	
+						}
+						else
+						{
+							System.out.println("Please login first!");
+						}
+						
 						break;
 
 					case 5: // To Feedback
-						library.subscription(sc, loggedInUser.getUser());
+						library.addFeedback(sc, loggedInUser.getUser());
 						break;
 
 					case 6: // To Borrow Book
-						library.subscription(sc, loggedInUser.getUser());
+						library.borrow(sc, loggedInUser.getUser());
 						break;
 					case 7: // To Return Book
 						library.subscription(sc, loggedInUser.getUser());
 						break;
 					case 8: // To review Book
-						library.subscription(sc, loggedInUser.getUser());
+						library.review(sc, loggedInUser.getUser());
 						break;
 					default:
 						System.out.println("Wrong input");

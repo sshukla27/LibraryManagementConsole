@@ -1,10 +1,8 @@
 package com.sudha;
 
-import java.time.LocalDate;
-
 public class Book {
  
-	private long bookId;
+	private int bookId;
 	private String bookName;
 	private String author;
 	private int review;
@@ -12,12 +10,12 @@ public class Book {
 	private int quantitiy;
 	private String genre;
 
-	public long getBookId() 
+	public int getBookId() 
 	{
 		return bookId;
 	}
 	
-	public void setBookId(long bookId)
+	public void setBookId(int bookId)
 	{
 		this.bookId = bookId;
 	}
@@ -94,7 +92,7 @@ public class Book {
 		this.genre = "";
 	}
 
-	public Book(long bookId, String bookName, String author, int edition, int quantitiy, String genre) {
+	public Book(int bookId, String bookName, String author, int edition, int quantitiy, String genre) {
 		this.bookId = bookId;
 		this.bookName = bookName;
 		this.author = author;

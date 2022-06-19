@@ -3,6 +3,13 @@ package com.sudha;
 import java.time.LocalDate;
 
 public class Subscription {
+	private int subscriptionId;
+	public int getSubscriptionId() {
+		return subscriptionId;
+	}
+	public void setSubscriptionId(int subscriptionId) {
+		this.subscriptionId = subscriptionId;
+	}
 	private int userId;
 	private long amount;
 	private LocalDate dateOfSubscription;
@@ -47,14 +54,16 @@ public class Subscription {
 		this.dateOfSubscription = null;
 		this.validity = null;
 		this.approved=false;
+		subscriptionId=0;
 	}
-	public Subscription(int userId, long amount, LocalDate dateOfSubscription, LocalDate validity, boolean approved) {
+	public Subscription(int subscriptionId,int userId, long amount, LocalDate dateOfSubscription, LocalDate validity, boolean approved) {
 	
 		this.userId = userId;
 		this.amount = amount;
 		this.dateOfSubscription = dateOfSubscription;
 		this.validity = validity;
 		this.approved= approved;
+		this.subscriptionId=subscriptionId;
 	}
 	
 	

@@ -57,11 +57,11 @@ public class Review {
 	}
 
 	public Review(int reviewId, int userId, int bookId, int stars, String comment) {
-		super();
 		this.reviewId = reviewId;
 		this.userId = userId;
 		this.bookId = bookId;
 		this.stars = stars;
 		this.comment = comment;
 	}
-}
+
+	}

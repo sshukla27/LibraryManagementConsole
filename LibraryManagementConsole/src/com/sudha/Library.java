@@ -23,6 +23,7 @@ public class Library {
 		roles = new ArrayList<Role>();
 		genres = new ArrayList<Genre>();
 		reviews = new ArrayList<Review>();
+		booksBorrow=new ArrayList<BookBorrow>();
 		
 		try {
 			books.add(new Book(2,"The Secret", "Rhonda Byrne", 2010,15,"Self-help" ));
@@ -68,7 +69,7 @@ public class Library {
 		
 		System.out.println("Fill up the details:");
 		System.out.print("Book Id : ");
-		book.setBookId(sc.nextLong());
+		book.setBookId(sc.nextInt());
 
 		System.out.print("\nBook Name : ");
 		uInput = getInput();
@@ -97,49 +98,55 @@ public class Library {
 	
 	public void editBook(Scanner sc)
 	{
-		Book book=new Book();
+		
 		System.out.println("Enter the book name you want to edit:");
 		String editable=sc.next();
-		try {
-		for(Book b:books)
+		int bookIndex=0;
+		for(int i=0; i<books.size();i++)
 		{
-			if(b.getBookName().equals(editable))
+			
+		
+			if(books.get(i).getBookName().equals(editable))
 			{
-				String uInput=getInput();
-				System.out.print("Book Id : ");
-				book.setBookId(sc.nextLong());
+				bookIndex=i;
+				break;
+			}
+		}
+		
+			if(bookIndex!=0)
+			{
+				Book bk=new Book();
+				//String uInput=getInput();
+				//System.out.print("Book Id : ");
+				//bk.setBookId(sc.nextLong());
 
 				System.out.print("\nBook Name : ");
-				uInput = getInput();
-				book.setBookName(uInput);
+				//uInput = getInput();
+				books.get(bookIndex).setBookName(getInput());
 
 				System.out.print("\nAuthor : ");
-				uInput = getInput();
-				book.setAuthor(uInput);
-
+				//uInput = getInput();
+				//bk.setAuthor(getInput());
+				books.get(bookIndex).setAuthor(getInput());
 //				System.out.print("\nReview : ");
 //				book.setReview(sc.nextInt());
 
 				System.out.print("\nEdition : ");
-				book.setEdition(sc.nextInt());
+				books.get(bookIndex).setEdition(sc.nextInt());
 
 				System.out.print("\nQuantity : ");
-				book.setQuantitiy(sc.nextInt());
+				books.get(bookIndex).setQuantitiy(sc.nextInt());
 
 				System.out.print("\nGenre : ");
-				uInput = getInput();
-				book.setGenre(uInput);
-				books.add(book);
+				//uInput = getInput();
+				books.get(bookIndex).setGenre(getInput());
 				System.out.print("successfully edited" + "\n\n");
-
 			}
 			else 
 			{
 				System.out.println("The book "+editable+" does not exist in Library");
 			}
 		}
-		}catch(Exception e) {}
-	}
 
 	public void displayBooks() {
 
@@ -161,7 +168,7 @@ public class Library {
 		}
 	}
 		// readers operation 
-	public boolean signingUp(Scanner sc)//sign up
+	public boolean signUp(Scanner sc)//sign up
 	{
 		User r = new User();
 		String rInput;
@@ -212,7 +219,7 @@ public class Library {
 		Book bk=null;
 			for(Book b:books)
 			{
-				if(b.getBookName().equals(searchOption) || b.getAuthor().equals(searchOption)|| b.getGenre().equals(searchOption))
+				if(b.getBookName().toLowerCase().contains(searchOption.toLowerCase()) || b.getAuthor().toLowerCase().contains(searchOption.toLowerCase())|| b.getGenre().toLowerCase().contains(searchOption.toLowerCase()))
 				{
 					bk=b;
 					break;
@@ -236,45 +243,29 @@ public enum LoginStatus{
 	}
 	public LoggedInUser login(Scanner sc, String rEmail,String rPasswd) { //Reader's login
 		
-		//System.out.println("Enter User Id : ");
-//		rEmail = sc.next();
-//
-//		System.out.println("Enter Password : ");
-//		rPasswd = sc.next();
-		
 		LoggedInUser loggedInUser=new LoggedInUser();
-		//LoginStatus ls;
-		//User user = null;
 
 		for(User u:users)
 		{
 			if(u.getEmail().equals(rEmail))
 			{
-			//	user=u;
 				loggedInUser.setUser(u);
 				break;
 			}
-				
 		}
-		if(loggedInUser.getUser()!=null)//????????????????????????????????????????????????????????????????????????????????????????
+		if(loggedInUser.getUser()!=null)
 		{
 			if(loggedInUser.getUser().getPwd().equals(rPasswd))
 				{
-					//System.out.println("Login successful.");
-					//ls= LoginStatus.Success;
 					loggedInUser.setLoginStatus(LoginStatus.Success);
 				}
 				else
 				{
-					//System.out.println("Password Incorrect!");
-					//ls= LoginStatus.PasswordIncorrect;
 					loggedInUser.setLoginStatus(LoginStatus.PasswordIncorrect);
 				}
 			}
 			else
 			{
-				//System.out.println("User Id does not exist..Please sign up");
-					//ls= LoginStatus.UserNotFound;
 					loggedInUser.setLoginStatus(LoginStatus.UserNotFound);
 			}
 				return loggedInUser;
@@ -287,10 +278,11 @@ public boolean subscription(Scanner sc, User u)
 	boolean status=false;
 
 	Subscription subscription=new Subscription();
+	subscription.setSubscriptionId(subscriptions.size()+1);
 	subscription.setUserId(u.getUserId());
 	subscription.setDateOfSubscription(LocalDate.now());
 	subscription.setValidity(LocalDate.now().plusMonths(2));
-	
+	subscription.setApproved(false);
 	subscriptions.add(subscription);
 	System.out.println("Payment successful...awaiting approval!");
 	status=true;
@@ -298,37 +290,117 @@ public boolean subscription(Scanner sc, User u)
 }
 
 	
-public boolean approvePayment( Scanner sc)
+public boolean approval( Scanner sc)
 {
 		boolean status=false;
-	for(Subscription s: subscriptions)
+		int userIdToApprove;
+		Subscription s = null;
+		System.out.println("Choose one option for APPROVAL : \n"+
+							"1- Subscription\n"+
+							"2- Borrow Book\n+"+ 
+							"3- Return Book ");
+		int approve=sc.nextInt();
+		
+	switch(approve)
 	{
-		if(!s.isApproved())
-			System.out.println("UserId\t"+ "Date of subscription"+"Validity");
-		{
-			System.out.println(s.getUserId()+ "\t" +s.getDateOfSubscription()+"\t"+ s.getValidity());
-			/*
-			 * showAllProperties from subscription as table.
-			 * 
-			 */
-			System.out.print("Enter the Userid to approve subscription: " );
-			int userIdToApprove=sc.nextInt();
-			
-				
-		}
+		case 1://approval for subscription
+			for(Subscription sk: subscriptions)
+			{
+				if(!sk.isApproved())
+				{
+					System.out.println(sk.getSubscriptionId()+ sk.getUserId()+ "\t" +sk.getDateOfSubscription()+"\t"+ sk.getValidity());	
+				}
+			}
+			System.out.print("Enter subscription Id to update :");
+			int sId=sc.nextInt();
+			System.out.print("\n Choose one option\n 1-To approve subscription: \n 2- To reject subscription due to payment failure");
+					userIdToApprove=sc.nextInt();
+
+					switch(userIdToApprove)
+					{	
+						case 1 :
+						for(int i=0; i<subscriptions.size();i++)
+						{
+							if(subscriptions.get(i).getSubscriptionId()==sId)
+							{
+								subscriptions.get(i).setApproved(true);
+								break;
+							}
+						}
+						break;						
+					
+						case 2 :
+							for(int i=0; i<subscriptions.size();i++)
+							{
+								if(subscriptions.get(i).getSubscriptionId()==sId)
+								{
+									subscriptions.remove(i);
+									break;
+								}
+							}
+							break;						
+					}
+					status=true;
+		 break;
+		case 2:
+//			Borrow Book start
+			for(BookBorrow bb : booksBorrow)
+			{
+				if(!bb.isBorrowApproved())
+				{
+					System.out.println(bb.getBookBorrowId()+" "+bb.getBookName()+" "+bb.getUserId());	
+				}
+			}
+			System.out.print("Enter BookBorrow Id to update :");
+			int bbId=sc.nextInt();
+			System.out.print("\n Choose one option\n 1-To approve borrow: \n 2- To reject borrow");
+					int bbOption=sc.nextInt();
+
+					switch(bbOption)
+					{	
+						case 1 :
+						for(int i=0; i<booksBorrow.size();i++)
+						{
+							if(booksBorrow.get(i).getBookBorrowId() ==bbId)
+							{
+								booksBorrow.get(i).setBorrowApproved(true);
+								break;
+							}
+						}
+						break;						
+					
+						case 2 :
+							for(int i=0; i<booksBorrow.size();i++)
+							{
+								if(booksBorrow.get(i).getBookBorrowId()==bbId)
+								{
+									booksBorrow.remove(i);
+									break;
+								}
+							}
+							break;						
+					}
+					status=true;
+//			Borrow Book end
+					
+					
+			break;
+			default :
+				break;
 	}
-return status;
+					return status;
 }
 		
-public boolean borrow(Scanner sc, int userId, int bookId )
+public boolean borrow(Scanner sc, User u  )
 		{
 			boolean bookBorrowStatus=false;
 			Subscription sk=null;
+			Book bk=null;
 			BookBorrow bookBorrow=new BookBorrow();
 			
 			for(Subscription s:subscriptions)
 			{
-				if(s.getUserId()==userId)
+				if(s.getUserId()==u.getUserId())
 				{
 					sk=s;
 					break;
@@ -336,20 +408,40 @@ public boolean borrow(Scanner sc, int userId, int bookId )
 			}
 			if(sk!=null)
 			{
-				if(sk.getValidity().isBefore(LocalDate.now()))
+				if(sk.getValidity().isBefore(LocalDate.now()))//if there is no subscription
 			    		 {
 			    	 		sk.setApproved(false);
 			    	 		System.out.println("Subscription expired..Please renew to avail the facility!");
+			    	 		subscriptions.remove(sk);
 			    		 }
 			     		else
 			     			{
-			     				bookBorrow.setUserId(userId);
-			     				bookBorrow.setBookId(bookId);
-			     				bookBorrow.setBorrowDate(LocalDate.now());
-			     				bookBorrow.setReturnDate(LocalDate.now().plusWeeks(2));
-			     				booksBorrow.add(bookBorrow);
-			     				System.out.println("Request sent for book-borrow...awaiting approval!");
-			     				bookBorrowStatus=true;
+			     				System.out.print("Enter Book name you want to borrow :");
+			     				String bookInput=getInput();
+			     				for(Book b: books)
+			     				{
+			     					if(b.getBookName().toLowerCase().contains(bookInput.toLowerCase()))
+			     					{
+			     						bk=b;
+			     					}
+			     				}
+
+			     				if(bk!=null)
+			     				{
+			     					bookBorrow.setUserId(u.getUserId());
+			     					bookBorrow.setBookId(bk.getBookId());
+			     					bookBorrow.setBookName(bookInput);
+			     					bookBorrow.setBorrowDate(LocalDate.now());
+			     					bookBorrow.setReturnDate(LocalDate.now().plusWeeks(2));
+			     					bookBorrow.setBorrowApproved(false);
+			     					booksBorrow.add(bookBorrow);
+			     					System.out.println("Request sent for book-borrow...awaiting approval!");
+			     					bookBorrowStatus=true;
+			     				}
+			     				else
+			     				{
+			     					System.out.println("The book is not available!");
+			     				}
 			     			}
 			}
 			else
@@ -358,19 +450,40 @@ public boolean borrow(Scanner sc, int userId, int bookId )
 			}
 			return bookBorrowStatus;
 		}
-	
-			
-		
-		
-	
+ 
+public void review(Scanner sc, User user  )
+{
+	 Review review=new Review();
+	 System.out.print("Enter the BookId you want to give feedback about : ");
+	 review.setBookId(sc.nextInt());
+	 
+	 review.setUserId(user.getUserId());
+	 review.setReviewId(review.reviewId+1);
 
+	 System.out.print("How many starts you rate it with : ");
+	 review.setStars(sc.nextInt());
+	 
+	 System.out.println("Any Comment or feedback : ");
+	 review.setComment(getInput());
+	 
+	 reviews.add(review);
+	 
+	 System.out.print("Thank you for your the review! ");
+	 //apporval property not added in this class because reader is entitled to give his review whether it's good or bad.
+}
+			
+public void addFeedback(Scanner sc, User user)
+{
 	
-	
-	
-	
-	// ask liberarian to enter subscription id to approve.
-	//search subscription by sub id.
-	//In this subs object setApproved=true;
+	CustomerFeedback feedback=new CustomerFeedback();
+	System.out.println("Please drop your feedback here : ");
+	feedback.setComment(getInput());
+	feedback.setReaderID(user.getUserId());
+	feedback.setApproved(false);
+	feedbacks.add(feedback);
+
+	System.out.println("Thank you for your feedback! We are commited to better out services with your feedback :)");
+}
 
 }
 

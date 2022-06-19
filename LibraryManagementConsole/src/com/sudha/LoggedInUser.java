@@ -18,6 +18,7 @@ public class LoggedInUser {
 	}
 	public void setLoginStatus(LoginStatus loginStatus) {
 		this.loginStatus = loginStatus;
+		
 	}
 	
 	// How to use login method in main method.
@@ -26,4 +27,6 @@ public class LoggedInUser {
 	//loggedInUser class.
 	//why did we comment out else part in search method
 	//role class needs to be used.
+	//What can we access private method.
+	//pls explain edit book method flow.
 }

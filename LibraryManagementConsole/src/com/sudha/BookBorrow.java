@@ -3,14 +3,32 @@ package com.sudha;
 import java.time.LocalDate;
 
 public class BookBorrow {
+	private int bookBorrowId;
+	public int getBookBorrowId() {
+		return bookBorrowId;
+	}
+
+	public void setBookBorrowId(int bookBorrowId) {
+		this.bookBorrowId = bookBorrowId;
+	}
 
 	private int userId;
-	private long bookId;
+	private int bookId;
+	private String bookName;
+	
 	private LocalDate borrowDate;
 	private LocalDate returnDate;
 	private boolean borrowApproved;
 	private boolean returnApproved;
 	
+	public String getBookName() {
+		return bookName;
+	}
+
+	public void setBookName(String bookName) {
+		this.bookName = bookName;
+	}
+
 	
 	public boolean isBorrowApproved() {
 		return borrowApproved;
@@ -40,7 +58,7 @@ public class BookBorrow {
 		return bookId;
 	}
 
-	public void setBookId(long bookId) {
+	public void setBookId(int bookId) {
 		this.bookId = bookId;
 	}
 
@@ -61,20 +79,25 @@ public class BookBorrow {
 	}
 
 	public BookBorrow() {
+		this.bookBorrowId=0;
 		this.userId = 0;
 		this.bookId = 0;
 		this.borrowDate = null;
 		this.returnDate = null;
 		this.borrowApproved=false;
 		this.returnApproved=false;
+		this.bookName = "";
 	}
 
-	public BookBorrow(int userId, long bookId, LocalDate borrowDate, LocalDate returnDate,boolean borrowApproved,boolean returnApproved) {
+	public BookBorrow(int bookBorrowId, int userId, int bookId, LocalDate borrowDate, LocalDate returnDate,boolean borrowApproved,
+			boolean returnApproved, String bookName) {
 		this.userId = userId;
 		this.bookId = bookId;
 		this.borrowDate = borrowDate;
 		this.returnDate = returnDate;
 		this.borrowApproved=borrowApproved;
 		this.returnApproved=returnApproved;
+		this.bookName = bookName;
+		this.bookBorrowId=bookBorrowId;
 	}
 }
